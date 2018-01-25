@@ -42,11 +42,14 @@ then
   /usr/sbin/squid -N -f /etc/squid/squid.conf -z
 fi
 
-
-if [ "$(basename $1)" == "squid" ]; then
-    trap 'rm -f /var/log/squid/access.log' EXIT SIGINT SIGTERM
+if [ "$(basename $1)" == "squid" ];
+then
+    rm -f /var/log/squid/*
+    trap 'rm -f /var/log/squid/*' EXIT SIGINT SIGTERM
     su -s /bin/sh squid -c 'mkfifo /var/log/squid/access.log'
-    cat /var/log/squid/access.log &
+    su -s /bin/sh squid -c 'mkfifo /var/log/squid/cache.log'
+
+    cat /var/log/squid/access.log /var/log/squid/cache.log &
     echo "$@"
     "$@"
 else
