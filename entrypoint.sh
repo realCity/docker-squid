@@ -1,4 +1,9 @@
 #!/bin/sh
+#
+# Refs:
+#    * https://wiki.squid-cache.org/Features/DynamicSslCert
+#    * http://marek.helion.pl/install/squid.html
+
 set -e
 touch /etc/squid/nobump-sites.txt
 
@@ -29,12 +34,14 @@ EOF
         -keyout /etc/squid/ssl_cert/proxy.pem           \
         -out /etc/squid/ssl_cert/proxy.pem              \
         -subj "$subject";
+fi
 
+if [ ! -d "/var/lib/squid/ssl_db" ];
+then
     mkdir -p /var/lib/squid
     chown -R squid: /var/lib/squid
     /usr/lib/squid/ssl_crtd -c -s  /var/lib/squid/ssl_db -M 4 MB
 fi
-
 
 if [ ! -d "/var/cache/squid/00" ];
 then
