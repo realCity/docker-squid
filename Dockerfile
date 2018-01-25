@@ -3,7 +3,7 @@ MAINTAINER fabio.montefuscolo@gmail.com
 
 
 RUN apk update                                                \
-    && apk add squid                                          \
+    && apk add openssl squid                                  \
     && sed -Eie '/^#/d;/^ *$/d' /etc/squid/squid.conf         \
     && sed -i                                                 \
         '1iaccess_log stdio:/var/log/squid/access.log squid'  \
