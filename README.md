@@ -66,3 +66,10 @@ The certifcate generate by container is a CA certificate. Squid will intercept h
 
 Please, create pull requests or comment any suggestion you have.
 
+
+## References
+
+* http://marek.helion.pl/install/squid.html
+* https://aacable.wordpress.com/2013/08/13/videocache-and-squid-configuration-short-notes/
+* https://wiki.squid-cache.org/Features/DynamicSslCert
+
