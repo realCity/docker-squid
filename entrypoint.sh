@@ -7,7 +7,7 @@
 set -e
 touch /etc/squid/nobump-sites.txt
 
-if [ ! -f "/etc/squid/ssl_cert/proxy.pem" ];
+if [ ! -f "/etc/squid/ssl_cert/squid.pem" ];
 then
     cat >> /etc/ssl/openssl.cnf << EOF
 
@@ -31,9 +31,13 @@ EOF
 
     openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
         -extensions v3_ca                               \
-        -keyout /etc/squid/ssl_cert/proxy.pem           \
-        -out /etc/squid/ssl_cert/proxy.pem              \
+        -keyout /etc/squid/ssl_cert/squid.key           \
+        -out /etc/squid/ssl_cert/squid.crt              \
         -subj "$subject";
+
+    cat /etc/squid/ssl_cert/squid.key       \
+        /etc/squid/ssl_cert/squid.crt       \
+        > /etc/squid/ssl_cert/squid.pem
 fi
 
 if [ ! -d "/var/lib/squid/ssl_db" ];
