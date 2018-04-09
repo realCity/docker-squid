@@ -1,17 +1,22 @@
 FROM sameersbn/ubuntu:14.04.20170123
 MAINTAINER sameer@damagehead.com
 
+ARG PROXY_USER
+ARG PROXY_PASSWORD
+
 ENV SQUID_VERSION=3.3.8 \
     SQUID_CACHE_DIR=/var/spool/squid3 \
     SQUID_LOG_DIR=/var/log/squid3 \
-    SQUID_USER=proxy
+    PROXY_USER=${PROXY_USER} \
+    PROXY_PASSWORD=${PROXY_PASSWORD}
 
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 80F70E11F0F0D5F10CB20E62F5DA5F09C3173AA6 \
  && echo "deb http://ppa.launchpad.net/brightbox/squid-ssl/ubuntu trusty main" >> /etc/apt/sources.list \
  && apt-get update \
- && DEBIAN_FRONTEND=noninteractive apt-get install -y squid3-ssl=${SQUID_VERSION}* \
+ && DEBIAN_FRONTEND=noninteractive apt-get install -y squid3-ssl=${SQUID_VERSION}* apache2-utils \
  && mv /etc/squid3/squid.conf /etc/squid3/squid.conf.dist \
  && rm -rf /var/lib/apt/lists/*
+RUN htpasswd -bc /etc/squid3/passwords ${PROXY_USER} ${PROXY_PASSWORD}
 
 COPY squid.conf /etc/squid3/squid.conf
 COPY entrypoint.sh /sbin/entrypoint.sh
